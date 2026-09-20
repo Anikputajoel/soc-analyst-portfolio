@@ -105,3 +105,34 @@ The decoded command only produced test output and did not demonstrate malicious 
 - `Initiated: true` indicates that the local side initiated the connection.
 - Process ID is useful for correlating process-related telemetry.
 - Evidence should be analyzed before reaching a conclusion.
+
+Investigation Timeline
+
+All timestamps below are recorded in UTC from the Sysmon telemetry.
+
+UTC Timestamp| Event ID| Process| PID| Activity
+"2026-09-20 12:59:58.488"| 3| "taskhostw.exe"| 7184| Outbound connection to "40.84.97.4:443"
+"2026-09-20 15:00:57.668"| 22| "powershell.exe"| 8704| DNS query for "google.com", QueryStatus "0"
+"2026-09-20 15:36:14.304"| 1| "powershell.exe"| 6360| PowerShell executed with "-EncodedCommand"
+
+Correlation Analysis
+
+The Event ID 3 network connection was associated with "taskhostw.exe" (PID 7184), while the PowerShell events had different Process IDs (8704 and 6360).
+
+Because the Process IDs and timestamps do not establish a common process instance, the available telemetry does not support attributing the "40.84.97.4:443" connection to the PowerShell process.
+
+The DNS query was successfully completed ("QueryStatus: 0"), but successful DNS resolution does not by itself indicate malicious or benign activity.
+
+The use of "-EncodedCommand" raised suspicion and required further investigation. The controlled Base64 value was decoded to:
+
+"Write-Output 'SOC-LAB-TEST'"
+
+The decoded command produced test output and did not demonstrate malicious behavior.
+
+Analyst Assessment
+
+The investigation demonstrates the importance of correlating process identity, Process ID, timestamps, and supporting telemetry before attributing network activity to a process.
+
+The available evidence raises investigative interest around the encoded PowerShell activity, but it does not establish malicious behavior.
+
+Further investigation would include reviewing EDR telemetry, related process activity, command-line context, destination-IP context, and additional Windows/Sysmon events.
