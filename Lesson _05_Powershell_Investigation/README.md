@@ -60,7 +60,7 @@ Sysmon Event ID 1 was used to identify the PowerShell process and obtain its Pro
 - User: `socstudent\analy`
 - Command line contained `-EncodedCommand`
 
-![PowerShell Encoded CommandLesso](../VirtualBox_SOC-Windows11_2event1.png)
+![PowerShell Encoded CommandLesso](../VirtualBox_SOC-Windows11_20_09_2026_event1encoded.png)
 
 ### Evidence 2 — Network Connection
 
