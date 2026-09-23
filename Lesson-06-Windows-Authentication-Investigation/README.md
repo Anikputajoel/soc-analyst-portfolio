@@ -155,3 +155,48 @@ The investigation demonstrated how Windows authentication events can be used to 
 The presence of failed logons, successful logons, privileged activity, account creation, or account deletion does not automatically indicate malicious behavior.
 
 A SOC analyst should correlate the available evidence, validate the source and account activity, review additional telemetry, and consider organizational context before reaching a final determination.
+Section 9 — Authentication Investigation Exercise
+
+Investigation Scenario
+
+The following controlled scenario was analyzed:
+
+Time| Event| Account| Logon Type| Source
+08:41:02| 4625| administrator| 10| 203.0.113.50
+08:41:05| 4625| administrator| 10| 203.0.113.50
+08:41:08| 4624| administrator| 10| 203.0.113.50
+08:41:09| 4672| administrator| —| Logon ID 0x7A21
+
+Analyst Observation
+
+Two failed remote interactive logons were followed by a successful remote interactive logon for the administrator account from the same source address. A 4672 event then recorded special privileges for the administrator account.
+
+Correlation Analysis
+
+The 4625 and 4624 events can be associated based on the same account, Logon Type, source address, and close timestamps.
+
+The 4672 event requires additional correlation because the provided 4624 scenario did not include its Logon ID. Matching the 4624 Logon ID with "0x7A21" would provide stronger evidence that both events belong to the same Windows logon session.
+
+Analyst Assessment
+
+The sequence is unusual and warrants investigation, but the available evidence does not by itself prove that the administrator account was compromised.
+
+Possible legitimate explanations could include an authorized remote user entering an incorrect password before successfully authenticating.
+
+Additional Evidence to Investigate
+
+- Windows Security authentication events
+- RDP logs
+- EDR telemetry
+- Firewall and network logs
+- VPN logs, where applicable
+- IAM and MFA records
+- Source IP ownership and organizational context
+- Account-owner or IT confirmation
+- Process activity following the successful logon
+
+Key Lesson
+
+Unusual authentication activity should trigger investigation, not an automatic malicious classification.
+
+A SOC analyst should correlate the available evidence, validate the activity against organizational context, and gather additional telemetry before reaching a final determination.
