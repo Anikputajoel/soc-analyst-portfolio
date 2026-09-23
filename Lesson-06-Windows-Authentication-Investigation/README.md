@@ -45,6 +45,7 @@ Observed information included:
 - Account: SYSTEM / "socstudent$"
 - Logon Type: 5
 - Source Network Address: blank
+- (../lesson6_event4672.png)
 
 The event demonstrated a successful service logon. The event was not classified as malicious based on the event alone.
 
@@ -58,6 +59,7 @@ Observed information included:
 - Logon Type: 2
 - Source Network Address: "127.0.0.1"
 - Failure information recorded by Windows
+- (../lesson6_event4625.png)
 
 The activity was generated intentionally during the lab and therefore was not treated as a brute-force attack.
 
@@ -70,6 +72,7 @@ Observed information included:
 - Account: SYSTEM
 - Logon ID: "0x3e7"
 - Special privileges assigned to the logon
+- (../lesson6_event4672.png)
 
 The presence of SYSTEM and special privileges was not considered malicious by itself. Additional context would be required before making a security determination.
 
