@@ -289,3 +289,85 @@ The investigation demonstrated how Windows authentication events can be used to 
 The presence of failed logons, successful logons, privileged activity, account creation, account deletion, PowerShell execution, or network connections does not automatically indicate malicious behavior.
 
 A SOC analyst should correlate the available evidence, validate the source and account activity, review additional telemetry, and consider organizational context before reaching a final determination.
+
+## Section 11 — SOC Investigation Report
+### Scenario
+
+A simulated authentication and process/network activity sequence was investigated:
+
+- 21:14:02 — Windows Security Event ID 4625 — admin — Logon Type 10 — Source IP 198.51.100.25
+- 21:14:05 — Windows Security Event ID 4625 — admin — Logon Type 10 — Source IP 198.51.100.25
+- 21:14:08 — Windows Security Event ID 4624 — admin — Logon Type 10 — Source IP 198.51.100.25
+- 21:14:09 — Windows Security Event ID 4672 — admin — Logon ID 0x44B2
+- 21:14:15 — Windows Security Event ID 4688 — Process: powershell.exe
+- 21:14:18 — Sysmon Event ID 3 — powershell.exe — External destination IP — Destination port 443
+
+### Observation
+
+The timeline shows two failed Type 10 logon attempts followed by a successful Type 10 logon from the same source IP address. A 4672 event subsequently recorded special privileges assigned to the admin logon session. Event ID 4688 then recorded creation of powershell.exe, followed by a Sysmon Event ID 3 network connection to an external IP address on destination port 443.
+
+### Evidence
+
+Evidence 1 — Windows Security Event Log  
+Event ID 4625 recorded a failed Type 10 logon for admin at 21:14:02 from 198.51.100.25.
+
+Evidence 2 — Windows Security Event Log  
+Event ID 4625 recorded a second failed Type 10 logon for admin at 21:14:05 from 198.51.100.25.
+
+Evidence 3 — Windows Security Event Log  
+Event ID 4624 recorded a successful Type 10 logon for admin at 21:14:08 from 198.51.100.25.
+
+Evidence 4 — Windows Security Event Log  
+Event ID 4672 recorded special privileges assigned to the admin logon session at 21:14:09. Logon ID: 0x44B2.
+
+Evidence 5 — Windows Security Event Log  
+Event ID 4688 recorded creation of powershell.exe at 21:14:15.
+
+Evidence 6 — Sysmon Operational Log  
+Sysmon Event ID 3 recorded a network connection associated with powershell.exe at 21:14:18 to an external destination IP on destination port 443.
+
+### Analysis
+
+The sequence of two failed Type 10 logon attempts followed by a successful Type 10 logon from the same source IP within a short timeframe warrants investigation. Event ID 4672 subsequently recorded special privileges assigned to the admin logon session, followed by creation of powershell.exe and a Sysmon Event ID 3 network connection to an external IP address on destination port 443.
+
+The sequence represents unusual activity that requires additional context and validation. The available evidence does not by itself establish that the activity was malicious or that the external IP address is malicious.
+
+### Conclusion
+
+Based on the available evidence, the activity represents a suspicious authentication and process/network activity sequence that requires further investigation. The evidence is consistent with multiple possible explanations, including unsuccessful authentication attempts followed by a successful remote logon, legitimate administrative activity, or potentially unauthorized activity.
+
+The available evidence does not establish brute-force activity, impersonation, malware infection, or data exfiltration.
+
+### Recommendations
+
+1. Review Windows Security and IAM logs to determine whether the admin account activity was authorized.
+
+2. Review PowerShell process telemetry, including the command line and available parent/child process relationships.
+
+3. Correlate Windows Security events, Sysmon Operational telemetry, and EDR telemetry using compatible timestamps, Logon ID, Logon Type, PID, ProcessGuid, account, and source/destination information where available.
+
+4. Investigate the destination IP address using approved threat-intelligence sources.
+
+5. Review firewall and relevant network telemetry to determine whether the outbound connection was permitted and obtain additional context.
+
+6. Validate the activity with the asset owner or IT team.
+
+7. Review the organization's approved operating and change-management schedules to determine whether the activity occurred within an authorized administrative or maintenance window.
+
+8. If the activity remains suspicious or cannot be validated, escalate to the appropriate Tier 2 SOC analyst according to the organization's escalation procedure.
+
+9. Continue monitoring for related authentication, process, and network activity according to organizational procedures.
+
+10. Document all investigative actions, evidence, findings, and validation results in the incident record.
+
+### Key Professional Lessons
+
+- Evidence should describe what the telemetry actually recorded.
+- Analysis explains what the evidence means and how events correlate.
+- Conclusions should not exceed what the available evidence supports.
+- An external IP address is not automatically an IOC.
+- Port 443 does not automatically prove HTTPS or malicious activity.
+- Logon ID is used for authentication/session correlation.
+- PID is used for process correlation.
+- ProcessGuid can provide stronger Sysmon process correlation when available.
+- Additional evidence should be clearly distinguished from evidence already collected.
