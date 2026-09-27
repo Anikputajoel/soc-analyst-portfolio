@@ -371,3 +371,99 @@ The available evidence does not establish brute-force activity, impersonation, m
 - PID is used for process correlation.
 - ProcessGuid can provide stronger Sysmon process correlation when available.
 - Additional evidence should be clearly distinguished from evidence already collected.
+- 
+## Section 12 — Independent Authentication Investigation
+
+### Scenario
+
+A simulated SOC alert involved the administrator account:
+
+- 02:17:04 — Event ID 4625 — administrator — Logon Type 10 — Source IP 203.0.113.45
+- 02:17:07 — Event ID 4625 — administrator — Logon Type 10 — Source IP 203.0.113.45
+- 02:17:11 — Event ID 4624 — administrator — Logon Type 10 — Source IP 203.0.113.45
+- 02:17:12 — Event ID 4672 — administrator — Logon ID 0x8F21
+- 02:17:19 — Event ID 4688 — Process: powershell.exe
+- 02:17:23 — Sysmon Event ID 3 — powershell.exe — External destination IP — Destination port 443
+
+- ### Observation
+
+Between 02:17:04 and 02:17:07, Event ID 4625 recorded two failed Type 10 logon attempts for the administrator account from source IP 203.0.113.45.
+
+At 02:17:11, Event ID 4624 recorded a successful Type 10 logon for the administrator account from source IP 203.0.113.45.
+
+At 02:17:12, Event ID 4672 recorded special privileges assigned to the administrator logon, with Logon ID 0x8F21.
+
+At 02:17:19, Event ID 4688 recorded creation of powershell.exe.
+
+At 02:17:23, Sysmon Event ID 3 recorded a network connection associated with powershell.exe to an external destination IP on destination port 443.
+
+### Evidence
+
+Evidence 1 — Windows Security Event Log
+Event ID 4625 recorded two failed Type 10 logon attempts for administrator at 02:17:04 and 02:17:07 from source IP 203.0.113.45.
+
+Evidence 2 — Windows Security Event Log
+Event ID 4624 recorded a successful Type 10 logon for administrator at 02:17:11 from source IP 203.0.113.45.
+
+Evidence 3 — Windows Security Event Log
+Event ID 4672 recorded special privileges assigned to the administrator logon at 02:17:12. Logon ID: 0x8F21.
+
+Evidence 4 — Windows Security Event Log
+Event ID 4688 recorded creation of powershell.exe at 02:17:19.
+
+Evidence 5 — Sysmon Operational Log
+Sysmon Event ID 3 recorded a network connection associated with powershell.exe at 02:17:23 to an external destination IP on destination port 443.
+
+Additional evidence to obtain:
+Firewall logs, EDR telemetry, IAM logs, and relevant authentication/RDP logs.
+
+### Analysis
+
+The activity represents a suspicious authentication and process/network activity sequence that requires further investigation. Two failed Type 10 logon attempts were followed by a successful Type 10 logon for the administrator account from the same source IP address, 203.0.113.45, within a short timeframe.
+
+Event ID 4672 subsequently recorded special privileges assigned to the administrator logon session with Logon ID 0x8F21. Event ID 4688 then recorded creation of powershell.exe, followed shortly afterward by Sysmon Event ID 3 recording a network connection associated with powershell.exe to an external destination IP on port 443.
+
+This sequence warrants investigation, but the available evidence does not establish that the activity was malicious. The Logon ID from Event ID 4624 would also need to be reviewed to determine whether the successful logon and 4672 event belong to the same logon session.
+
+### Conclusion
+
+The sequence represents suspicious authentication followed by privileged account activity, PowerShell process creation, and an external network connection. The activity warrants further investigation, but the available evidence does not establish malicious activity.
+
+Possible explanations include legitimate administrative activity, scheduled or authorized remote activity, third-party access, or unauthorized authentication attempts. The evidence currently does not establish brute-force activity, impersonation, or persistence.
+
+### Recommendations
+
+1. Document the investigation, evidence, analysis, and investigative actions in the incident record.
+
+2. Escalate to a Tier 2 SOC analyst according to the organization's escalation procedure if the activity remains suspicious or cannot be validated.
+
+3. Review IAM and authentication logs for additional activity involving the administrator account.
+
+4. Review RDP-related telemetry to determine the context of the Type 10 logon activity.
+
+5. Review the available PowerShell command line and process telemetry, including the process chain where available.
+
+6. Correlate the related Windows Security and Sysmon events using timestamps, account, Logon ID, PID, ProcessGuid, source IP, and destination information where available.
+
+7. Review EDR telemetry for activity associated with powershell.exe.
+
+8. Review Sysmon Event ID 3 and relevant firewall/network telemetry for additional context about the external connection.
+
+9. Evaluate the external destination IP using approved threat-intelligence sources.
+
+10. Validate the administrator activity with the asset owner or IT team and determine whether it was authorized.
+
+11. Continue investigation according to organizational procedures because the sequence remains suspicious and requires further validation.
+
+### Key Professional Lessons
+
+- Evidence describes what the telemetry actually recorded.
+- Analysis explains what the evidence means and how events correlate.
+- Conclusions should not exceed what the available evidence supports.
+- Additional evidence to obtain should be clearly separated from evidence already collected.
+- Logon ID is used for authentication/session correlation.
+- PID is used for process correlation.
+- ProcessGuid can provide stronger Sysmon process correlation when available.
+- An external IP address is not automatically a malicious IOC.
+- Port 443 does not automatically prove HTTPS or malicious activity.
+- Suspicious activity should be investigated and validated before being classified as malicious.
