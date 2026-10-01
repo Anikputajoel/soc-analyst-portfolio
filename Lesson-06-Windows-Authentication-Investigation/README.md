@@ -468,7 +468,8 @@ Possible explanations include legitimate administrative activity, scheduled or a
 - Port 443 does not automatically prove HTTPS or malicious activity.
 - Suspicious activity should be investigated and validated before being classified as malicious.
 
-section13: Account Activity Investigation.
+Section 13 — Account Activity Investigation.
+
 Recommendations
 
 1. Correlate the relevant Windows events using timestamps, account names, Logon IDs, and available process identifiers such as Process ID or ProcessGuid to determine whether the activities are related.
