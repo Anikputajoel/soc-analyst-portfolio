@@ -467,3 +467,22 @@ Possible explanations include legitimate administrative activity, scheduled or a
 - An external IP address is not automatically a malicious IOC.
 - Port 443 does not automatically prove HTTPS or malicious activity.
 - Suspicious activity should be investigated and validated before being classified as malicious.
+
+section13: Account Activity Investigation.
+Recommendations
+
+1. Correlate the relevant Windows events using timestamps, account names, Logon IDs, and available process identifiers such as Process ID or ProcessGuid to determine whether the activities are related.
+
+2. Review the administrator authentication activity, including Event ID 4624 and the associated Logon ID, to determine whether the 4672 privileged-logon event belongs to the same logon session.
+
+3. Review IAM and authentication logs for additional information about the administrator account and the account-management activity.
+
+4. Investigate the creation of the "backup-admin" account and deletion of the "old-service" account to determine whether these actions were authorized and what operational impact they had.
+
+5. Review change-management records and confirm the activity with the asset owner or IT team.
+
+6. Review EDR telemetry and available process telemetry for "powershell.exe", including its process chain and command-line information where available.
+
+7. Escalate the investigation to a Tier 2 SOC analyst if the activity cannot be validated as authorized or if additional suspicious indicators are identified.
+
+8. Document the investigation findings, validation results, and any actions taken according to organizational security procedures.
