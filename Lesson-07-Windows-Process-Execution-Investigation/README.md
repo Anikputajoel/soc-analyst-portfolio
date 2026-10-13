@@ -132,3 +132,86 @@ The available evidence does not establish that the activity was malicious. The t
 
 10. Document the investigation findings, correlation results, validation outcomes, and actions taken.
 
+Hands-On Lab: Windows Process and Network Correlation
+
+Objective
+
+Investigate Windows process creation, establish parent-child relationships using Sysmon Process GUIDs, and examine associated network activity.
+
+1. Evidence Collected
+
+Source: Microsoft Sysmon Operational Log
+
+Parent process
+
+- Image: "C:\Windows\System32\svchost.exe"
+- Process ID: "1300"
+- Parent image: "C:\Windows\System32\services.exe"
+- Command line: "C:\Windows\System32\svchost.exe -k netsvcs -p -s schedule"
+- UTC timestamp: "2026-10-12 20:39:16"
+- ProcessGuid: "{890b2ad7-4572-6acd-1b00-000000002600}"
+
+Child process
+
+- Image: "C:\Windows\System32\taskhostw.exe"
+- Process ID: "4788"
+- Parent image: "C:\Windows\System32\svchost.exe"
+- Parent Process ID: "1300"
+- UTC timestamp: "2026-10-12 21:21:47"
+- ProcessGuid: "{890b2ad7-5579-6acd-0902-000000002600}"
+
+Network activity
+
+- Sysmon Event ID: "3"
+- Process: "taskhostw.exe"
+- Process ID: "4788"
+- Source IP: "10.0.2.15"
+- Destination IP: "20.42.179.192"
+- Destination port: "443"
+- Protocol: TCP
+- UTC timestamp: "2026-10-12 21:47:40"
+- ProcessGuid: "{890b2ad7-5579-6acd-0902-000000002600}"
+
+Executable validation
+
+- Image path: "C:\Windows\System32\taskhostw.exe"
+- Authenticode signature status: "Valid"
+- Certificate subject identifies Microsoft Windows and Microsoft Corporation.
+
+Destination context
+
+- An IP ownership lookup associated "20.42.179.192" with Microsoft Corporation.
+- This is contextual information, not proof that the connection was authorized or benign.
+
+2. Analysis
+
+The Sysmon Event ID 1 records support a parent-child relationship between "svchost.exe" (PID 1300) and "taskhostw.exe" (PID 4788). The child's ParentProcessGuid matched the recorded ProcessGuid of the parent.
+
+The Sysmon Event ID 3 record has the same ProcessGuid as the "taskhostw.exe" creation event, supporting correlation of the network connection with that process instance.
+
+The connection was made over TCP to destination port 443. Port 443 alone does not establish the application-layer protocol or the legitimacy of the connection.
+
+The executable's location and valid Microsoft-associated signature support its authenticity, but do not independently establish that its observed behavior was authorized. Likewise, the destination's reported ownership does not prove the connection was safe.
+
+3. Conclusion
+
+The collected evidence supports a process-creation and network-activity relationship involving "taskhostw.exe". The available records do not establish malicious activity or conclusively verify the purpose of the outbound connection.
+
+Assessment: Further validation required.
+
+4. Recommendations
+
+1. Validate the executable's signature and file integrity using trusted Windows tools.
+2. Review the destination IP's ownership and reputation using reliable sources.
+3. Examine related Sysmon and Windows events around the recorded timestamps.
+4. Determine whether the connection is consistent with expected system behavior.
+5. Correlate with other available telemetry before assigning a final disposition.
+
+5. Skills Demonstrated
+
+- Sysmon Event ID 1 process-creation analysis.
+- Sysmon Event ID 3 network-connection analysis.
+- Parent-child process correlation using ProcessGuid and ParentProcessGuid.
+- Executable path and digital signature validation.
+- IP ownership investigation.
+- Evidence-based analysis and cautious SOC reporting.
