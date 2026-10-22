@@ -1,0 +1,50 @@
+Lesson 8 — Windows Network Connection Investigation
+
+Objective
+
+Investigate a controlled network connection using Sysmon Event ID 3 and correlate it with Sysmon Event ID 1 to identify the responsible process and its parent process.
+
+Evidence Collected
+
+Sysmon Event ID 1 — Process Creation
+
+- UTC timestamp: 2026-10-22 02:34:19
+- Image: "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+- Process ID: "2544"
+- Parent image: "C:\Windows\explorer.exe"
+- Parent Process ID: "512"
+- Command line: ""C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe""
+- ProcessGuid: "{890b2ad7-762b-6ad9-0f02-000000002900}"
+
+Sysmon Event ID 3 — Network Connection
+
+- UTC timestamp: 2026-10-22 02:34:27
+- Image: "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
+- Process ID: "2544"
+- Source IP: "10.0.2.15"
+- Destination IP: "1.1.1.1"
+- Destination port: "443"
+- Protocol: TCP
+- ProcessGuid: "{890b2ad7-762b-6ad9-0f02-000000002900}"
+
+Analysis
+
+The ProcessGuid and Process ID matched across Event ID 1 and Event ID 3, correlating the network connection with the PowerShell process created at 02:34:19 UTC.
+
+The network connection was recorded at 02:34:27 UTC, eight seconds after process creation. The parent image was Windows Explorer.
+
+The connection was generated during a controlled lab exercise using "Test-NetConnection". This context is consistent with the observed network activity.
+
+Conclusion
+
+The evidence establishes a correlation between the PowerShell process and the recorded TCP connection to "1.1.1.1" on port 443.
+
+The activity is consistent with the controlled lab test. The two events do not independently establish malicious activity or prove that the endpoint is compromised.
+
+Recommendations
+
+1. Preserve the relevant Event ID 1 and Event ID 3 records.
+2. Use ProcessGuid to correlate additional Sysmon events associated with the same process.
+3. Review command-line and surrounding process activity when investigating unfamiliar PowerShell network connections.
+4. Correlate network telemetry with DNS, endpoint, and other relevant security logs when investigating unexplained activity.
+5. Avoid classifying activity as malicious without sufficient supporting evidence.
