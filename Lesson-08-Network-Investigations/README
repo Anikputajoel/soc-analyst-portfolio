@@ -16,8 +16,7 @@ Investigate a controlled network connection using Sysmon Event ID 3 and correlat
 - Command line: ""C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe""
 - ProcessGuid: "{890b2ad7-762b-6ad9-0f02-000000002900}"
 
-![ProcessCreation](../lesson08_event1.png)
-![Process Creation](../lesson08_event1.png)
+ ![Process Creation](../lesson08_event1.png)
 
 ##Sysmon Event ID 3 — Network Connection
 
@@ -30,9 +29,7 @@ Investigate a controlled network connection using Sysmon Event ID 3 and correlat
 - Protocol: TCP
 - ProcessGuid: "{890b2ad7-762b-6ad9-0f02-000000002900}"
 
-![NetworkConnection](../lesson08_event3.png)
-![Network Connection](../lesson08_event3.png)
-
+  ![Network connection](../lesson08_event3.png)
 
 ##Analysis
 
