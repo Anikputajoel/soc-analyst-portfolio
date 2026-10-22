@@ -1,12 +1,12 @@
-Lesson 8 — Windows Network Connection Investigation
+##Lesson 8 — Windows Network Connection Investigation
 
-Objective
+#Objective
 
 Investigate a controlled network connection using Sysmon Event ID 3 and correlate it with Sysmon Event ID 1 to identify the responsible process and its parent process.
 
-Evidence Collected
+#Evidence Collected
 
-Sysmon Event ID 1 — Process Creation
+#Sysmon Event ID 1 — Process Creation
 
 - UTC timestamp: 2026-10-22 02:34:19
 - Image: "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
@@ -19,7 +19,7 @@ Sysmon Event ID 1 — Process Creation
 ![ProcessCreation](../lesson08_event1.png)
 ![Process Creation](../lesson08_event1.png)
 
-Sysmon Event ID 3 — Network Connection
+##Sysmon Event ID 3 — Network Connection
 
 - UTC timestamp: 2026-10-22 02:34:27
 - Image: "C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe"
@@ -34,7 +34,7 @@ Sysmon Event ID 3 — Network Connection
 ![Network Connection](../lesson08_event3.png)
 
 
-Analysis
+##Analysis
 
 The ProcessGuid and Process ID matched across Event ID 1 and Event ID 3, correlating the network connection with the PowerShell process created at 02:34:19 UTC.
 
@@ -42,13 +42,13 @@ The network connection was recorded at 02:34:27 UTC, eight seconds after process
 
 The connection was generated during a controlled lab exercise using "Test-NetConnection". This context is consistent with the observed network activity.
 
-Conclusion
+##Conclusion
 
 The evidence establishes a correlation between the PowerShell process and the recorded TCP connection to "1.1.1.1" on port 443.
 
 The activity is consistent with the controlled lab test. The two events do not independently establish malicious activity or prove that the endpoint is compromised.
 
-Recommendations
+##Recommendations
 
 1. Preserve the relevant Event ID 1 and Event ID 3 records.
 2. Use ProcessGuid to correlate additional Sysmon events associated with the same process.
