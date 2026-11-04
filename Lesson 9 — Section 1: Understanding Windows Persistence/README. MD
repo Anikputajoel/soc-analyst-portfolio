@@ -1,6 +1,6 @@
-Lesson 9 — Section 1: Understanding Windows Persistence
+## Lesson 9 — Section 1: Understanding Windows Persistence
 
-Objective
+**Objective**
 
 Understand Windows persistence mechanisms and how attackers may abuse legitimate Windows features to maintain access or execute programs repeatedly.
 
@@ -10,7 +10,7 @@ Persistence is a technique that allows a program or attacker to maintain access 
 
 Common Windows Persistence Mechanisms
 
-1. Task Scheduler
+1. **Task Scheduler**
 
 Windows Task Scheduler allows programs and scripts to execute automatically based on configured triggers, including:
 
@@ -19,19 +19,19 @@ Windows Task Scheduler allows programs and scripts to execute automatically base
 - A specified date or time
 - Other configured system events
 
-2. Windows Services
+2. **Windows Services**
 
 Services are background processes that can start automatically or under configured conditions. Attackers may abuse malicious or modified services to maintain persistence.
 
-3. Registry Run Keys
+3. **Registry Run Keys**
 
 Certain Windows Registry locations allow programs to launch automatically when a user signs in or when Windows starts.
 
-SOC Investigation Principles
+## SOC Investigation Principles
 
 The presence of a scheduled task, service, or registry Run entry does not automatically indicate malicious activity.
 
-A SOC analyst should examine:
+**A SOC analyst should examine:**
 
 1. The task, service, or registry entry name.
 2. The executable path.
@@ -41,17 +41,17 @@ A SOC analyst should examine:
 6. Related process and authentication events.
 7. Whether the activity is expected in the organizational environment.
 
-Assessment
+**Assessment**
 
 Result: 100%
 
-Topics successfully assessed:
+## Topics successfully assessed:
 
 - Definition of persistence.
 - Task Scheduler as an automatic execution mechanism.
 - Why an unfamiliar scheduled task does not automatically prove malware.
 - Registry Run keys as another persistence mechanism.
 
-Analyst Takeaway
+## Analyst Takeaway
 
 Windows persistence mechanisms are used by both legitimate applications and attackers. Their presence alone is not proof of compromise. Analysts must investigate the associated execution details and correlate evidence before reaching a conclusion.
