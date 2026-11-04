@@ -1,10 +1,10 @@
-Lesson 9 — Section 2: Windows Scheduled Task Investigation
+## Lesson 9 — Section 2: Windows Scheduled Task Investigation
 
-Objective
+**Objective**
 
 Investigate Windows scheduled tasks to understand their names, paths, states, triggers, execution actions, executable locations, and digital signatures.
 
-Skills Demonstrated
+**Skills Demonstrated**
 
 - Scheduled task enumeration
 - Task properties investigation
@@ -14,7 +14,7 @@ Skills Demonstrated
 - Authenticode digital signature verification
 - Evidence-based SOC assessment
 
-1. Scheduled Task Enumeration
+**1. Scheduled Task Enumeration**
 
 Command used:
 
@@ -28,7 +28,10 @@ Get-ScheduledTask | Select-Object -First 10 TaskName, TaskPath, State
 
 No unfamiliar task names were identified during the initial review.
 
-2. Scheduled Task Investigation
+![schedule task](Lesson_9_sect2_schedul_task)
+![schedule task](Lesson_9_sect2_schedul_task10)
+
+**2. Scheduled Task Investigation**
 
 The OneDrive Startup Task was selected for further examination.
 
@@ -41,7 +44,9 @@ State| Ready
 Trigger| Logon trigger
 Principal| "MSFT_TaskPrincipal2"
 
-3. Execution Action Analysis
+![schedule task](Lesson_9_sect2_schedul_task11)
+
+**3. Execution Action Analysis**
 
 The task's action was inspected.
 
@@ -51,7 +56,7 @@ Observed information:
 - Arguments: "/start instance"
 - Working directory: Not specified
 
-4. Executable Path Verification
+**4. Executable Path Verification**
 
 The initially supplied path did not resolve.
 
@@ -64,8 +69,9 @@ PowerShell's "Test-Path" command returned:
 "True"
 
 This confirmed that the executable existed at the corrected path.
+![schedule task](Lesson_9_sect2_schedul_task12)
 
-5. Digital Signature Verification
+**5. Digital Signature Verification**
 
 The executable was examined using PowerShell's "Get-AuthenticodeSignature" command.
 
@@ -73,7 +79,9 @@ The lab observation was that the signature was verified and the publisher was Mi
 
 This supported the assessment that the executable was signed by Microsoft.
 
-6. Investigation Analysis
+![schedule task](Lesson_9_sect2_schedul_task12)
+
+**6. Investigation Analysis**
 
 The scheduled task was configured to run at user logon and launched OneDriveLauncher.exe from a Microsoft OneDrive application directory.
 
@@ -83,7 +91,8 @@ These findings were consistent with legitimate OneDrive startup activity.
 
 A valid digital signature does not independently prove that a file is harmless. Additional validation and correlation may be necessary in a real SOC investigation.
 
-7. Analyst Conclusion
+
+**7. Analyst Conclusion**
 
 Assessment: Likely legitimate OneDrive startup activity.
 
@@ -91,7 +100,7 @@ No evidence collected during this exercise confirmed malicious persistence or sy
 
 The investigation demonstrated how to examine scheduled task properties, identify an executable, verify its location, and inspect its digital signature.
 
-8. Recommendations
+**8. Recommendations**
 
 1. Preserve task details and screenshots as investigation evidence.
 2. Verify executable paths and digital signatures.
@@ -99,7 +108,7 @@ The investigation demonstrated how to examine scheduled task properties, identif
 4. Investigate suspicious tasks further before reaching a final determination.
 5. Do not delete or disable tasks without authorization and supporting evidence.
 
-Assessment Result
+**Assessment Result**
 
 Section 2: Passed.
 
